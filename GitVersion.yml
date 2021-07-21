@@ -1,0 +1,7 @@
+mode: ContinuousDeployment
+next-version: 0.1.0
+tag-prefix: 'v'
+continuous-delivery-fallback-tag: ''
+branches:
+  pull-request:
+    tag: pr
