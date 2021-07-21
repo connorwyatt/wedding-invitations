@@ -6,6 +6,8 @@ on:
   pull_request:
     branches: [ main ]
 
+concurrency: ci-${{ github.ref }}
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: connorwyatt/wedding-invitations
@@ -31,33 +33,13 @@ jobs:
         with:
           useConfigFile: true
 
-  tag-version:
-    name: Tag Version
-    runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' }}
-    needs: calculate-version
-    env:
-      SEMVER: ${{ needs.calculate-version.outputs.semVer }}
-    steps:
-      - name: Create GitHub Tag
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{ github.token }}
-          script: |
-            github.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: "refs/tags/v${{ env.SEMVER }}",
-              sha: context.sha
-            })
-
   build:
     name: Build
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-    needs: [ calculate-version, tag-version ]
+    needs: [ calculate-version ]
     env:
       SEMVER: ${{ needs.calculate-version.outputs.semVer }}
     steps:
@@ -95,3 +77,23 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+  tag-version:
+    name: Tag Version
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: [ calculate-version, build ]
+    env:
+      SEMVER: ${{ needs.calculate-version.outputs.semVer }}
+    steps:
+      - name: Create GitHub Tag
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/v${{ env.SEMVER }}",
+              sha: context.sha
+            })
