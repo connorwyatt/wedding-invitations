@@ -1,0 +1,11 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:postgresql://localhost:5433/wedding-invitations
+    username: user
+    password: password
+
+axon:
+  axonserver:
+    enabled: false

@@ -22,6 +22,16 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - wedding-invitations-postgres-development:/var/lib/postgresql/data
+  postgres-test:
+    image: postgres:13.3
+    container_name: wedding-invitations-postgres-test
+    ports:
+      - "5433:5432"
+    restart: on-failure
+    environment:
+      POSTGRES_DB: wedding-invitations
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
 volumes:
   wedding-invitations-axonserver-development-data:
   wedding-invitations-axonserver-development-eventdata:
