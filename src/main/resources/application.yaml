@@ -1,8 +1,20 @@
 server:
   port: 8001
 spring:
+  application:
+    name: WeddingInvitations
   main:
     banner-mode: off
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/wedding-invitations
+    username: user
+    password: password
+  jooq:
+    sql-dialect: postgres
+  sql:
+    init:
+      continue-on-error: true
 ---
 server:
   port: 80
