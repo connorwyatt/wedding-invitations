@@ -39,7 +39,7 @@ class InvitationsHandler(private val commandGateway: CommandGateway, private val
   suspend fun postInvitation(serverRequest: ServerRequest): ServerResponse {
     val definition = serverRequest.awaitBody<InvitationDefinition>()
 
-    val command = CreateInvitation(definition.code)
+    val command = CreateInvitation(definition.code, definition.emailAddress, definition.invitees)
 
     val invitationId = commandGateway.sendAndWait<UUID>(command)
 

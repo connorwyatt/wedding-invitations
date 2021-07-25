@@ -18,9 +18,19 @@ class InMemoryInvitationsRepository {
 
   suspend fun insert(invitation: Invitation) {
     if (getById(invitation.id) != null) {
-      throw Exception()
+      throw Exception("Invitation already exists.")
     }
 
     invitations = invitations.plus(invitation.id to invitation)
+  }
+
+  suspend fun update(invitation: Invitation) {
+    if (getById(invitation.id) == null) {
+      throw Exception("Invitation does not exist.")
+    }
+
+    invitations = invitations.mapValues {
+      if (it.key == invitation.id) invitation else it.value
+    }
   }
 }

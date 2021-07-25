@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  postgres-test:
+    image: postgres:13.3
+    container_name: wedding-invitations-postgres-test
+    ports:
+      - "5433:5432"
+    restart: on-failure
+    environment:
+      POSTGRES_DB: wedding-invitations
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password

@@ -2,6 +2,7 @@ package io.connorwyatt.wedding.invitations.domain
 
 import io.connorwyatt.wedding.invitations.messages.commands.CreateInvitation
 import io.connorwyatt.wedding.invitations.messages.events.InvitationCreated
+import io.connorwyatt.wedding.invitations.messages.events.InviteeAdded
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
@@ -18,11 +19,21 @@ class Invitation {
 
   @CommandHandler
   constructor(command: CreateInvitation) {
-    AggregateLifecycle.apply(InvitationCreated(UUID.randomUUID(), command.code))
+    invitationId = UUID.randomUUID()
+
+    AggregateLifecycle.apply(InvitationCreated(invitationId, command.code, command.emailAddress))
+
+    command.invitees.forEach { invitee ->
+      AggregateLifecycle.apply(InviteeAdded(invitationId, invitee.name))
+    }
   }
 
   @EventSourcingHandler
   fun on(event: InvitationCreated) {
     invitationId = event.invitationId
+  }
+
+  @EventSourcingHandler
+  fun on(event: InviteeAdded) {
   }
 }
