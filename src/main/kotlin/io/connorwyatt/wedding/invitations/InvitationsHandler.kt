@@ -9,6 +9,7 @@ import io.connorwyatt.wedding.invitations.messages.queries.InvitationsQuery
 import kotlinx.coroutines.future.await
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.extensions.kotlin.query
+import org.axonframework.extensions.kotlin.queryMany
 import org.axonframework.queryhandling.QueryGateway
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
@@ -21,7 +22,7 @@ import java.util.UUID
 @Component
 class InvitationsHandler(private val commandGateway: CommandGateway, private val queryGateway: QueryGateway) {
   suspend fun getInvitations(serverRequest: ServerRequest): ServerResponse {
-    val invitations = queryGateway.query<List<Invitation>, InvitationsQuery>(InvitationsQuery()).await()
+    val invitations = queryGateway.queryMany<Invitation, InvitationsQuery>(InvitationsQuery()).await()
 
     return ServerResponse.ok().bodyValueAndAwait(invitations)
   }
