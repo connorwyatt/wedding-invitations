@@ -12,9 +12,6 @@ spring:
     password: password
   jooq:
     sql-dialect: postgres
-  sql:
-    init:
-      continue-on-error: true
 ---
 server:
   port: 80
