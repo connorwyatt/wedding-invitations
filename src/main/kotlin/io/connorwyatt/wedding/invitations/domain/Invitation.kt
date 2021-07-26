@@ -13,18 +13,18 @@ import java.util.UUID
 @Aggregate
 class Invitation {
   @AggregateIdentifier
-  private lateinit var invitationId: UUID
+  private lateinit var invitationId: String
 
   constructor()
 
   @CommandHandler
   constructor(command: CreateInvitation) {
-    invitationId = UUID.randomUUID()
+    invitationId = UUID.randomUUID().toString()
 
     AggregateLifecycle.apply(InvitationCreated(invitationId, command.code, command.emailAddress))
 
     command.invitees.forEach { invitee ->
-      AggregateLifecycle.apply(InviteeAdded(invitationId, invitee.name))
+      AggregateLifecycle.apply(InviteeAdded(invitationId, UUID.randomUUID().toString(), invitee.name))
     }
   }
 

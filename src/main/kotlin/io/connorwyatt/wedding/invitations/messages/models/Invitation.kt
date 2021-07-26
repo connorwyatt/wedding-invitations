@@ -1,10 +1,9 @@
 package io.connorwyatt.wedding.invitations.messages.models
 
 import java.time.Instant
-import java.util.UUID
 
 data class Invitation(
-  val id: UUID,
+  val id: String,
   val code: String,
   val status: InvitationStatus,
   val invitationPosted: Boolean = false,

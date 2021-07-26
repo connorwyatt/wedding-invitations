@@ -12,6 +12,11 @@ spring:
     password: password
   jooq:
     sql-dialect: postgres
+logging:
+  level:
+    org:
+      jooq:
+        Constants: WARN
 ---
 server:
   port: 80

@@ -17,7 +17,6 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.awaitBody
 import org.springframework.web.reactive.function.server.bodyValueAndAwait
 import org.springframework.web.reactive.function.server.buildAndAwait
-import java.util.UUID
 
 @Component
 class InvitationsHandler(private val commandGateway: CommandGateway, private val queryGateway: QueryGateway) {
@@ -28,7 +27,7 @@ class InvitationsHandler(private val commandGateway: CommandGateway, private val
   }
 
   suspend fun getInvitationById(serverRequest: ServerRequest): ServerResponse {
-    val invitationId = UUID.fromString(serverRequest.pathVariable("invitationId"))
+    val invitationId = serverRequest.pathVariable("invitationId")
 
     val invitation = queryGateway.query<Invitation?, InvitationByIdQuery>(InvitationByIdQuery(invitationId)).await()
       ?: return ServerResponse.notFound().buildAndAwait()
@@ -41,7 +40,7 @@ class InvitationsHandler(private val commandGateway: CommandGateway, private val
 
     val command = CreateInvitation(definition.code, definition.emailAddress, definition.invitees)
 
-    val invitationId = commandGateway.sendAndWait<UUID>(command)
+    val invitationId = commandGateway.sendAndWait<String>(command)
 
     return ServerResponse.accepted().bodyValueAndAwait(Reference(invitationId.toString()))
   }
