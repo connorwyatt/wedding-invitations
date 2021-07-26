@@ -7,4 +7,3 @@ data class CreateInvitation(
   val emailAddress: String?,
   val invitees: List<InviteeDefinition>,
 )
-

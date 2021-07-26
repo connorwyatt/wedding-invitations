@@ -13,9 +13,14 @@ class SqlInvitationsRepository(
   private val invitationsRecordMapper: InvitationsRecordMapper,
   private val inviteesRecordMapper: InviteesRecordMapper,
 ) {
-  suspend fun search(): List<Invitation> {
+  suspend fun search(
+    code: String? = null,
+    emailAddress: String? = null,
+  ): List<Invitation> {
     val invitations = context
       .selectFrom(InvitationsTable.table)
+      .apply { code?.let { where(InvitationsTable.table.code.eq(it)) } }
+      .apply { emailAddress?.let { where(InvitationsTable.table.emailAddress.eq(it)) } }
       .orderBy(InvitationsTable.table.createdAt.desc())
       .fetchAsync()
       .await()

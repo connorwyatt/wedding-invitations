@@ -1,12 +1,11 @@
 package io.connorwyatt.wedding.invitations.domain
 
-import io.connorwyatt.wedding.invitations.messages.commands.CreateInvitation
 import io.connorwyatt.wedding.invitations.messages.events.InvitationCreated
 import io.connorwyatt.wedding.invitations.messages.events.InviteeAdded
-import org.axonframework.commandhandling.CommandHandler
+import io.connorwyatt.wedding.invitations.messages.models.InviteeDefinition
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
-import org.axonframework.modelling.command.AggregateLifecycle
+import org.axonframework.modelling.command.AggregateLifecycle.apply
 import org.axonframework.spring.stereotype.Aggregate
 import java.util.UUID
 
@@ -17,14 +16,13 @@ class Invitation {
 
   constructor()
 
-  @CommandHandler
-  constructor(command: CreateInvitation) {
-    invitationId = UUID.randomUUID().toString()
+  constructor(code: String, emailAddress: String?, invitees: List<InviteeDefinition>) {
+    val invitationId = UUID.randomUUID().toString()
 
-    AggregateLifecycle.apply(InvitationCreated(invitationId, command.code, command.emailAddress))
+    apply(InvitationCreated(invitationId, code, emailAddress))
 
-    command.invitees.forEach { invitee ->
-      AggregateLifecycle.apply(InviteeAdded(invitationId, UUID.randomUUID().toString(), invitee.name))
+    invitees.forEach { invitee ->
+      apply(InviteeAdded(invitationId, UUID.randomUUID().toString(), invitee.name))
     }
   }
 

@@ -40,8 +40,12 @@ class InvitationsHandler(private val commandGateway: CommandGateway, private val
 
     val command = CreateInvitation(definition.code, definition.emailAddress, definition.invitees)
 
-    val invitationId = commandGateway.sendAndWait<String>(command)
+    return try {
+      val invitationId = commandGateway.send<String>(command).await()
 
-    return ServerResponse.accepted().bodyValueAndAwait(Reference(invitationId.toString()))
+      ServerResponse.accepted().bodyValueAndAwait(Reference(invitationId))
+    } catch (e: Exception) {
+      ServerResponse.badRequest().bodyValueAndAwait(e.message ?: "An unknown error occurred.")
+    }
   }
 }
