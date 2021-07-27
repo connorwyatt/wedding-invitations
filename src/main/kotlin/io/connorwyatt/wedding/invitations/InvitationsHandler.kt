@@ -1,8 +1,10 @@
 package io.connorwyatt.wedding.invitations
 
 import io.connorwyatt.wedding.invitations.messages.commands.CreateInvitation
+import io.connorwyatt.wedding.invitations.messages.commands.RespondToInvitation
 import io.connorwyatt.wedding.invitations.messages.models.Invitation
 import io.connorwyatt.wedding.invitations.messages.models.InvitationDefinition
+import io.connorwyatt.wedding.invitations.messages.models.InvitationResponse
 import io.connorwyatt.wedding.invitations.messages.models.Reference
 import io.connorwyatt.wedding.invitations.messages.queries.InvitationByIdQuery
 import io.connorwyatt.wedding.invitations.messages.queries.InvitationsQuery
@@ -44,6 +46,24 @@ class InvitationsHandler(private val commandGateway: CommandGateway, private val
       val invitationId = commandGateway.send<String>(command).await()
 
       ServerResponse.accepted().bodyValueAndAwait(Reference(invitationId))
+    } catch (e: Exception) {
+      ServerResponse.badRequest().bodyValueAndAwait(e.message ?: "An unknown error occurred.")
+    }
+  }
+
+  suspend fun respondToInvitation(serverRequest: ServerRequest): ServerResponse {
+    val invitationId = serverRequest.pathVariable("invitationId")
+    val definition = serverRequest.awaitBody<InvitationResponse>()
+
+    queryGateway.query<Invitation?, InvitationByIdQuery>(InvitationByIdQuery(invitationId)).await()
+      ?: return ServerResponse.notFound().buildAndAwait()
+
+    val command = RespondToInvitation(invitationId, definition.invitees)
+
+    return try {
+      commandGateway.send<String>(command).await()
+
+      ServerResponse.accepted().buildAndAwait()
     } catch (e: Exception) {
       ServerResponse.badRequest().bodyValueAndAwait(e.message ?: "An unknown error occurred.")
     }

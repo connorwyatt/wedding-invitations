@@ -11,5 +11,6 @@ class InvitationsRouter {
     GET("/invitations", invitationsHandler::getInvitations)
     POST("/invitations", invitationsHandler::postInvitation)
     GET("/invitations/{invitationId}", invitationsHandler::getInvitationById)
+    POST("/invitations/{invitationId}/actions/respond", invitationsHandler::respondToInvitation)
   }
 }
