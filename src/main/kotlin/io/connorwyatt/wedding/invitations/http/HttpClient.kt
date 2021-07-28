@@ -28,7 +28,7 @@ class HttpClient(
 
     lateinit var response: java.net.http.HttpResponse<String>
     val responseTime = measureTimeMillis {
-      response = httpClient.send(request, BodyHandlers.ofString())
+      response = httpClient.sendAsync(request, BodyHandlers.ofString()).await()
     }
     logger.info(
       "Response received in {}ms with status code '{}'",
