@@ -6,6 +6,12 @@ spring:
     username: user
     password: password
 
+discord:
+  webhook-uri: http://localhost
+
+google-sheets:
+  sheet-uri: http://localhost
+
 axon:
   axonserver:
     enabled: false
