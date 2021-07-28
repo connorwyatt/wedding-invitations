@@ -12,6 +12,10 @@ spring:
     password: password
   jooq:
     sql-dialect: postgres
+discord:
+  webhook-uri: REPLACE_ME
+google-sheets:
+  sheet-uri: REPLACE_ME
 logging:
   level:
     org:
