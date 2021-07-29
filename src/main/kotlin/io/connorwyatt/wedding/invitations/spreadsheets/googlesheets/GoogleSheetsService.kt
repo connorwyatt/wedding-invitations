@@ -3,7 +3,6 @@ package io.connorwyatt.wedding.invitations.spreadsheets.googlesheets
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.sheets.v4.Sheets
-import com.google.api.services.sheets.v4.Sheets.Builder
 import com.google.api.services.sheets.v4.SheetsScopes
 import com.google.api.services.sheets.v4.model.ValueRange
 import com.google.auth.http.HttpCredentialsAdapter
@@ -31,10 +30,8 @@ class GoogleSheetsService(
   googleSheetsProperties: GoogleSheetsProperties,
 ) : SpreadsheetsService {
   private val spreadsheetId = googleSheetsProperties.spreadsheetId
-  private val sheets: Sheets
-
-  init {
-    sheets = Builder(
+  private val sheets: Sheets by lazy {
+    Sheets.Builder(
       GoogleNetHttpTransport.newTrustedTransport(),
       JacksonFactory.getDefaultInstance(),
       getServiceAccountCredentials()
