@@ -1,33 +1,40 @@
-package io.connorwyatt.wedding.invitations.googlesheets
+package io.connorwyatt.wedding.invitations.spreadsheets.googlesheets
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.sheets.v4.Sheets
+import com.google.api.services.sheets.v4.Sheets.Builder
 import com.google.api.services.sheets.v4.SheetsScopes
 import com.google.api.services.sheets.v4.model.ValueRange
 import com.google.auth.http.HttpCredentialsAdapter
 import com.google.auth.oauth2.GoogleCredentials
 import io.connorwyatt.wedding.invitations.messages.models.Invitation
 import io.connorwyatt.wedding.invitations.messages.models.Invitee
+import io.connorwyatt.wedding.invitations.spreadsheets.SpreadsheetsService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Component
 import java.net.URL
 import java.time.ZoneId
 import java.time.format.DateTimeFormatterBuilder
-import java.time.format.SignStyle
-import java.time.temporal.ChronoField
+import java.time.format.SignStyle.EXCEEDS_PAD
+import java.time.temporal.ChronoField.DAY_OF_MONTH
+import java.time.temporal.ChronoField.HOUR_OF_DAY
+import java.time.temporal.ChronoField.MINUTE_OF_HOUR
+import java.time.temporal.ChronoField.MONTH_OF_YEAR
+import java.time.temporal.ChronoField.SECOND_OF_MINUTE
+import java.time.temporal.ChronoField.YEAR
 
 @Component
 class GoogleSheetsService(
   @Value("\${spring.application.name}") applicationName: String,
   googleSheetsProperties: GoogleSheetsProperties,
-) {
+) : SpreadsheetsService {
   private val spreadsheetId = googleSheetsProperties.spreadsheetId
   private val sheets: Sheets
 
   init {
-    sheets = Sheets.Builder(
+    sheets = Builder(
       GoogleNetHttpTransport.newTrustedTransport(),
       JacksonFactory.getDefaultInstance(),
       getServiceAccountCredentials()
@@ -36,11 +43,11 @@ class GoogleSheetsService(
       .build()
   }
 
-  fun getSpreadsheetUrl(): URL {
+  override fun getSpreadsheetUrl(): URL {
     return URL(sheets.spreadsheets().get(spreadsheetId).execute().spreadsheetUrl)
   }
 
-  fun addInvitation(invitation: Invitation) {
+  override fun addInvitation(invitation: Invitation) {
     val valueRange = ValueRange().setRange(invitationsDataRange).setValues(listOf(mapToRow(invitation)))
 
     sheets.spreadsheets()
@@ -50,7 +57,7 @@ class GoogleSheetsService(
       .execute()
   }
 
-  fun updateInvitation(invitation: Invitation) {
+  override fun updateInvitation(invitation: Invitation) {
     val rows = sheets.spreadsheets()
       .values()
       .get(spreadsheetId, invitationsDataRange)
@@ -75,7 +82,7 @@ class GoogleSheetsService(
       .execute()
   }
 
-  fun addInvitee(invitationId: String, invitee: Invitee) {
+  override fun addInvitee(invitationId: String, invitee: Invitee) {
     val valueRange = ValueRange().setRange(inviteesDataRange).setValues(listOf(mapToRow(invitationId, invitee)))
 
     sheets.spreadsheets()
@@ -85,7 +92,7 @@ class GoogleSheetsService(
       .execute()
   }
 
-  fun updateInvitee(invitationId: String, invitee: Invitee) {
+  override fun updateInvitee(invitationId: String, invitee: Invitee) {
     val rows = sheets.spreadsheets()
       .values()
       .get(spreadsheetId, inviteesDataRange)
@@ -145,17 +152,17 @@ class GoogleSheetsService(
     private const val blankValue = ""
 
     private val dateTimeFormatter = DateTimeFormatterBuilder()
-      .appendValue(ChronoField.DAY_OF_MONTH, 2)
+      .appendValue(DAY_OF_MONTH, 2)
       .appendLiteral("/")
-      .appendValue(ChronoField.MONTH_OF_YEAR, 2)
+      .appendValue(MONTH_OF_YEAR, 2)
       .appendLiteral("/")
-      .appendValue(ChronoField.YEAR, 4, 10, SignStyle.EXCEEDS_PAD)
+      .appendValue(YEAR, 4, 10, EXCEEDS_PAD)
       .appendLiteral(" ")
-      .appendValue(ChronoField.HOUR_OF_DAY, 2)
+      .appendValue(HOUR_OF_DAY, 2)
       .appendLiteral(':')
-      .appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+      .appendValue(MINUTE_OF_HOUR, 2)
       .appendLiteral(':')
-      .appendValue(ChronoField.SECOND_OF_MINUTE, 2)
+      .appendValue(SECOND_OF_MINUTE, 2)
       .toFormatter()
       .withZone(ZoneId.systemDefault())
   }

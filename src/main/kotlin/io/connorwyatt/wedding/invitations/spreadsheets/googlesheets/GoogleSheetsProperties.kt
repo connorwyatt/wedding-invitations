@@ -1,4 +1,4 @@
-package io.connorwyatt.wedding.invitations.googlesheets
+package io.connorwyatt.wedding.invitations.spreadsheets.googlesheets
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding

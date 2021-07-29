@@ -1,4 +1,4 @@
-package io.connorwyatt.wedding.invitations.googlesheets
+package io.connorwyatt.wedding.invitations.spreadsheets.googlesheets
 
 import io.connorwyatt.wedding.invitations.messages.events.InvitationCreated
 import io.connorwyatt.wedding.invitations.messages.events.InvitationResponseReceived
