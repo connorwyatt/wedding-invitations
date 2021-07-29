@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: WeddingInvitationsTest
   main:
     allow-bean-definition-overriding: true
   datasource:
@@ -10,7 +12,7 @@ discord:
   webhook-uri: http://localhost
 
 google-sheets:
-  sheet-uri: http://localhost
+  spreadsheet-id: blank
 
 axon:
   axonserver:

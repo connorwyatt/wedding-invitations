@@ -31,6 +31,10 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
   implementation("org.axonframework:axon-spring-boot-starter:4.5.3")
   implementation("org.axonframework.extensions.kotlin:axon-kotlin:0.1.0")
+  implementation("com.google.auth:google-auth-library-oauth2-http:0.27.0")
+  implementation("com.google.api-client:google-api-client:1.30.4")
+  implementation("com.google.oauth-client:google-oauth-client-jetty:1.30.6")
+  implementation("com.google.apis:google-api-services-sheets:v4-rev581-1.25.0")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("io.projectreactor:reactor-test")
 }

@@ -13,10 +13,9 @@ class InvitationsRecordMapper : RecordMapper<InvitationsRecord, Invitation> {
         id = record.get(table.id),
         code = record.get(table.code),
         status = record.get(table.status, InvitationStatus::class.java),
-        invitationPosted = record.get(table.invitationPosted),
         emailAddress = record.get(table.emailAddress),
-        invitationEmailed = record.get(table.invitationEmailed),
         createdAt = record.get(table.createdAt).toInstant(),
+        sentAt = record.get(table.sentAt)?.toInstant(),
         respondedAt = record.get(table.respondedAt)?.toInstant(),
         invitees = listOf()
       )

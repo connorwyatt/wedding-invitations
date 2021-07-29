@@ -15,7 +15,7 @@ spring:
 discord:
   webhook-uri: REPLACE_ME
 google-sheets:
-  sheet-uri: REPLACE_ME
+  spreadsheet-id: REPLACE_ME
 logging:
   level:
     org:

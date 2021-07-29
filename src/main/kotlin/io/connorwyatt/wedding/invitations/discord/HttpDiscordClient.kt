@@ -1,6 +1,6 @@
 package io.connorwyatt.wedding.invitations.discord
 
-import io.connorwyatt.wedding.invitations.googlesheet.GoogleSheetsProperties
+import io.connorwyatt.wedding.invitations.googlesheets.GoogleSheetsService
 import io.connorwyatt.wedding.invitations.http.HttpClient
 import io.connorwyatt.wedding.invitations.messages.models.FoodOption.standard
 import io.connorwyatt.wedding.invitations.messages.models.Invitation
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 class HttpDiscordClient(
   private val httpClient: HttpClient,
   private val discordProperties: DiscordProperties,
-  private val googleSheetsProperties: GoogleSheetsProperties,
+  private val googleSheetsService: GoogleSheetsService,
 ) :
   DiscordClient {
   override suspend fun sendToWebhook(invitation: Invitation, inviteeResponses: List<InviteeResponse>) {
@@ -19,7 +19,7 @@ class HttpDiscordClient(
       "embeds" to listOf(
         mapOf(
           "title" to "Wedding Invitation Response Received",
-          "description" to "[Google Sheet](${googleSheetsProperties.sheetUri}) updated.",
+          "description" to "[Google Sheet](${googleSheetsService.getSpreadsheetUrl()}) updated.",
           "color" to 16711422,
           "fields" to inviteeResponses.map { inviteeResponse ->
             mapOf(
