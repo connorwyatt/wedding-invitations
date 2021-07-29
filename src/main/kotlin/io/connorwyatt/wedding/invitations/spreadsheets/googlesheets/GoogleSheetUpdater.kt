@@ -10,6 +10,7 @@ import io.connorwyatt.wedding.invitations.messages.models.Invitee
 import io.connorwyatt.wedding.invitations.messages.models.InviteeStatus.attending
 import io.connorwyatt.wedding.invitations.messages.models.InviteeStatus.notAttending
 import io.connorwyatt.wedding.invitations.messages.models.InviteeStatus.unknown
+import io.connorwyatt.wedding.invitations.spreadsheets.SpreadsheetsService
 import io.connorwyatt.wedding.invitations.sql.SqlInvitationsRepository
 import kotlinx.coroutines.runBlocking
 import org.axonframework.eventhandling.EventHandler
@@ -19,7 +20,7 @@ import java.time.Instant
 
 @Component
 class GoogleSheetUpdater(
-  private val googleSheetsService: GoogleSheetsService,
+  private val googleSheetsService: SpreadsheetsService,
   private val repository: SqlInvitationsRepository,
 ) {
   @EventHandler
