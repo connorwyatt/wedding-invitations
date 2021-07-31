@@ -55,12 +55,12 @@ class InvitationsProjection(private val repository: SqlInvitationsRepository) {
   }
 
   @EventHandler
-  fun on(event: InvitationEmailSent) {
+  fun on(event: InvitationEmailSent, @Timestamp timestamp: Instant) {
     runBlocking {
       val invitation = repository.getById(event.invitationId)
         ?: throw Exception("Invitation could not be found.")
 
-      val updatedInvitation = invitation.copy(emailSent = true)
+      val updatedInvitation = invitation.copy(emailSent = true, sentAt = timestamp)
 
       repository.update(updatedInvitation)
     }

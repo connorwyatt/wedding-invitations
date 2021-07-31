@@ -1,6 +1,7 @@
 package io.connorwyatt.wedding.invitations.spreadsheets.googlesheets
 
 import io.connorwyatt.wedding.invitations.messages.events.InvitationCreated
+import io.connorwyatt.wedding.invitations.messages.events.InvitationEmailSent
 import io.connorwyatt.wedding.invitations.messages.events.InvitationResponseReceived
 import io.connorwyatt.wedding.invitations.messages.events.InviteeAdded
 import io.connorwyatt.wedding.invitations.messages.models.Invitation
@@ -47,6 +48,14 @@ class GoogleSheetUpdater(
         status = unknown,
       )
     )
+  }
+
+  @EventHandler
+  fun on(event: InvitationEmailSent, @Timestamp timestamp: Instant) = runBlocking {
+    val invitation = repository.getById(event.invitationId)
+      ?: throw Exception("Cannot find Invitation.")
+
+    googleSheetsService.updateInvitation(invitation.copy(status = responseReceived, respondedAt = timestamp))
   }
 
   @EventHandler
