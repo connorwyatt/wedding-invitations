@@ -6,3 +6,4 @@ data class InvitationResponseReceived(
   val invitationId: String,
   val inviteeResponses: List<InviteeResponse>,
 )
+

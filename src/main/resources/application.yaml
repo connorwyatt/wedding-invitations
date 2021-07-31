@@ -12,10 +12,14 @@ spring:
     password: password
   jooq:
     sql-dialect: postgres
+  sendgrid:
+    api-key: REPLACE_ME
 discord:
   webhook-uri: REPLACE_ME
 google-sheets:
   spreadsheet-id: REPLACE_ME
+web-app:
+  invitation-url-prefix: REPLACE_ME
 logging:
   level:
     org:

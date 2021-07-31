@@ -30,6 +30,7 @@ class GoogleSheetUpdater(
         id = event.invitationId,
         code = event.code,
         status = created,
+        addressedTo = event.addressedTo,
         emailAddress = event.emailAddress,
         createdAt = timestamp,
       )

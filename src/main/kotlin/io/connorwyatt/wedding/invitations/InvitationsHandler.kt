@@ -2,6 +2,7 @@ package io.connorwyatt.wedding.invitations
 
 import io.connorwyatt.wedding.invitations.messages.commands.CreateInvitation
 import io.connorwyatt.wedding.invitations.messages.commands.RespondToInvitation
+import io.connorwyatt.wedding.invitations.messages.commands.SendInvitationEmail
 import io.connorwyatt.wedding.invitations.messages.models.Invitation
 import io.connorwyatt.wedding.invitations.messages.models.InvitationDefinition
 import io.connorwyatt.wedding.invitations.messages.models.InvitationResponse
@@ -40,12 +41,30 @@ class InvitationsHandler(private val commandGateway: CommandGateway, private val
   suspend fun postInvitation(serverRequest: ServerRequest): ServerResponse {
     val definition = serverRequest.awaitBody<InvitationDefinition>()
 
-    val command = CreateInvitation(definition.code, definition.emailAddress, definition.invitees)
+    val command =
+      CreateInvitation(definition.code, definition.addressedTo, definition.emailAddress, definition.invitees)
 
     return try {
       val invitationId = commandGateway.send<String>(command).await()
 
       ServerResponse.accepted().bodyValueAndAwait(Reference(invitationId))
+    } catch (e: Exception) {
+      ServerResponse.badRequest().bodyValueAndAwait(e.message ?: "An unknown error occurred.")
+    }
+  }
+
+  suspend fun sendInvitationEmail(serverRequest: ServerRequest): ServerResponse {
+    val invitationId = serverRequest.pathVariable("invitationId")
+
+    queryGateway.query<Invitation?, InvitationByIdQuery>(InvitationByIdQuery(invitationId)).await()
+      ?: return ServerResponse.notFound().buildAndAwait()
+
+    val command = SendInvitationEmail(invitationId)
+
+    return try {
+      commandGateway.send<String>(command).await()
+
+      ServerResponse.accepted().buildAndAwait()
     } catch (e: Exception) {
       ServerResponse.badRequest().bodyValueAndAwait(e.message ?: "An unknown error occurred.")
     }

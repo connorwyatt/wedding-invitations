@@ -35,6 +35,7 @@ dependencies {
   implementation("com.google.api-client:google-api-client:1.30.4")
   implementation("com.google.oauth-client:google-oauth-client-jetty:1.30.6")
   implementation("com.google.apis:google-api-services-sheets:v4-rev581-1.25.0")
+  implementation("com.sendgrid:sendgrid-java:4.6.1")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("io.projectreactor:reactor-test")
 }
@@ -44,7 +45,6 @@ tasks {
     archiveFileName.set("invitations.jar")
   }
 }
-
 
 tasks.withType<KotlinCompile> {
   kotlinOptions {

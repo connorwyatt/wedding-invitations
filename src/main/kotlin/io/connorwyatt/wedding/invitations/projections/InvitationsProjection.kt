@@ -1,6 +1,7 @@
 package io.connorwyatt.wedding.invitations.projections
 
 import io.connorwyatt.wedding.invitations.messages.events.InvitationCreated
+import io.connorwyatt.wedding.invitations.messages.events.InvitationEmailSent
 import io.connorwyatt.wedding.invitations.messages.events.InvitationResponseReceived
 import io.connorwyatt.wedding.invitations.messages.events.InviteeAdded
 import io.connorwyatt.wedding.invitations.messages.models.Invitation
@@ -26,6 +27,7 @@ class InvitationsProjection(private val repository: SqlInvitationsRepository) {
         id = event.invitationId,
         code = event.code,
         status = created,
+        addressedTo = event.addressedTo,
         emailAddress = event.emailAddress,
         createdAt = timestamp,
       )
@@ -47,6 +49,18 @@ class InvitationsProjection(private val repository: SqlInvitationsRepository) {
       )
 
       val updatedInvitation = invitation.copy(invitees = invitation.invitees.plus(invitee))
+
+      repository.update(updatedInvitation)
+    }
+  }
+
+  @EventHandler
+  fun on(event: InvitationEmailSent) {
+    runBlocking {
+      val invitation = repository.getById(event.invitationId)
+        ?: throw Exception("Invitation could not be found.")
+
+      val updatedInvitation = invitation.copy(emailSent = true)
 
       repository.update(updatedInvitation)
     }
