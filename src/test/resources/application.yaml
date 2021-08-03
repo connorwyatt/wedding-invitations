@@ -16,6 +16,9 @@ discord:
 google-sheets:
   spreadsheet-id: blank
 
+web-app:
+  invitation-url-prefix: REPLACE_ME
+
 axon:
   axonserver:
     enabled: false
