@@ -30,6 +30,7 @@ class GoogleSheetUpdater(
       Invitation(
         id = event.invitationId,
         code = event.code,
+        type = event.type,
         status = created,
         addressedTo = event.addressedTo,
         emailAddress = event.emailAddress,
@@ -55,7 +56,7 @@ class GoogleSheetUpdater(
     val invitation = repository.getById(event.invitationId)
       ?: throw Exception("Cannot find Invitation.")
 
-    googleSheetsService.updateInvitation(invitation.copy(status = responseReceived, respondedAt = timestamp))
+    googleSheetsService.updateInvitation(invitation.copy(emailSent = true, sentAt = timestamp))
   }
 
   @EventHandler
@@ -63,7 +64,13 @@ class GoogleSheetUpdater(
     val invitation = repository.getById(event.invitationId)
       ?: throw Exception("Cannot find Invitation.")
 
-    googleSheetsService.updateInvitation(invitation.copy(status = responseReceived, respondedAt = timestamp))
+    googleSheetsService.updateInvitation(
+      invitation.copy(
+        status = responseReceived,
+        contactInformation = event.contactInformation,
+        respondedAt = timestamp
+      )
+    )
 
     event.inviteeResponses.forEach { inviteeResponse ->
       val invitee = invitation.invitees.single { it.id == inviteeResponse.id }

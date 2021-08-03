@@ -123,11 +123,13 @@ class GoogleSheetsService(
   private fun mapToRow(invitation: Invitation) = listOf(
     invitation.id,
     invitation.code,
+    invitation.type.toString(),
     invitation.status.toString(),
     invitation.emailAddress ?: blankValue,
     dateTimeFormatter.format(invitation.createdAt),
     invitation.sentAt?.let { dateTimeFormatter.format(it) } ?: blankValue,
     invitation.respondedAt?.let { dateTimeFormatter.format(it) } ?: blankValue,
+    invitation.contactInformation ?: blankValue,
   )
 
   private fun mapToRow(invitationId: String, invitee: Invitee) = listOf(

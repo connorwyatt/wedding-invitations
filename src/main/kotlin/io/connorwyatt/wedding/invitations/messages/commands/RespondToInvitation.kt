@@ -6,5 +6,6 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier
 data class RespondToInvitation(
   @TargetAggregateIdentifier
   val invitationId: String,
+  val contactInformation: String?,
   val inviteeResponses: List<InviteeResponse>,
 )

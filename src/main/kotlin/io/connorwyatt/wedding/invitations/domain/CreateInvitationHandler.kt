@@ -27,7 +27,15 @@ class CreateInvitationHandler(
     }
 
     return@runBlocking aggregateRepository
-      .newInstance { Invitation(command.code, command.emailAddress, command.addressedTo, command.invitees) }
+      .newInstance {
+        Invitation(
+          command.code,
+          command.type,
+          command.emailAddress,
+          command.addressedTo,
+          command.invitees
+        )
+      }
       .identifierAsString()
   }
 

@@ -5,6 +5,7 @@ import io.connorwyatt.wedding.invitations.messages.events.InvitationCreated
 import io.connorwyatt.wedding.invitations.messages.events.InvitationEmailSent
 import io.connorwyatt.wedding.invitations.messages.events.InvitationResponseReceived
 import io.connorwyatt.wedding.invitations.messages.events.InviteeAdded
+import io.connorwyatt.wedding.invitations.messages.models.InvitationType
 import io.connorwyatt.wedding.invitations.messages.models.InviteeDefinition
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
@@ -33,10 +34,16 @@ class Invitation {
 
   constructor()
 
-  constructor(code: String, emailAddress: String?, addressedTo: String, invitees: List<InviteeDefinition>) {
+  constructor(
+    code: String,
+    type: InvitationType,
+    emailAddress: String?,
+    addressedTo: String,
+    invitees: List<InviteeDefinition>,
+  ) {
     val invitationId = UUID.randomUUID().toString()
 
-    apply(InvitationCreated(invitationId, code, addressedTo, emailAddress))
+    apply(InvitationCreated(invitationId, code, type, addressedTo, emailAddress))
 
     invitees.forEach { invitee ->
       apply(InviteeAdded(invitationId, UUID.randomUUID().toString(), invitee.name))
@@ -63,7 +70,7 @@ class Invitation {
       throw Exception("Not all invitees have responded.")
     }
 
-    apply(InvitationResponseReceived(invitationId, command.inviteeResponses))
+    apply(InvitationResponseReceived(invitationId, command.contactInformation, command.inviteeResponses))
   }
 
   fun acknowledgeInvitationEmailSent() {

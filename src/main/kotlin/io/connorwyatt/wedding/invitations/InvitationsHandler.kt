@@ -44,8 +44,13 @@ class InvitationsHandler(private val commandGateway: CommandGateway, private val
   suspend fun postInvitation(serverRequest: ServerRequest): ServerResponse {
     val definition = serverRequest.awaitBody<InvitationDefinition>()
 
-    val command =
-      CreateInvitation(definition.code, definition.addressedTo, definition.emailAddress, definition.invitees)
+    val command = CreateInvitation(
+      definition.code,
+      definition.type,
+      definition.addressedTo,
+      definition.emailAddress,
+      definition.invitees
+    )
 
     return try {
       val invitationId = commandGateway.send<String>(command).await()
@@ -80,7 +85,7 @@ class InvitationsHandler(private val commandGateway: CommandGateway, private val
     queryGateway.query<Invitation?, InvitationByIdQuery>(InvitationByIdQuery(invitationId)).await()
       ?: return ServerResponse.notFound().buildAndAwait()
 
-    val command = RespondToInvitation(invitationId, definition.invitees)
+    val command = RespondToInvitation(invitationId, definition.contactInformation, definition.invitees)
 
     return try {
       commandGateway.send<String>(command).await()

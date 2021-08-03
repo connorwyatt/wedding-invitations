@@ -26,6 +26,7 @@ class InvitationsProjection(private val repository: SqlInvitationsRepository) {
       val invitation = Invitation(
         id = event.invitationId,
         code = event.code,
+        type = event.type,
         status = created,
         addressedTo = event.addressedTo,
         emailAddress = event.emailAddress,
@@ -82,7 +83,12 @@ class InvitationsProjection(private val repository: SqlInvitationsRepository) {
         )
       }
 
-      val updatedInvitation = invitation.copy(status = responseReceived, respondedAt = timestamp, invitees = invitees)
+      val updatedInvitation = invitation.copy(
+        status = responseReceived,
+        contactInformation = event.contactInformation,
+        respondedAt = timestamp,
+        invitees = invitees
+      )
 
       repository.update(updatedInvitation)
     }

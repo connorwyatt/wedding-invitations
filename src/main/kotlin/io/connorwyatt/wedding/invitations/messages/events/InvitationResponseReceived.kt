@@ -4,6 +4,7 @@ import io.connorwyatt.wedding.invitations.messages.models.InviteeResponse
 
 data class InvitationResponseReceived(
   val invitationId: String,
+  val contactInformation: String?,
   val inviteeResponses: List<InviteeResponse>,
 )
 
