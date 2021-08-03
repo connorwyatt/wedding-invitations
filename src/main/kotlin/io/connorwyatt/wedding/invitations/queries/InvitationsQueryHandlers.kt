@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 class InvitationsQueryHandlers(private val repository: SqlInvitationsRepository) {
   @QueryHandler
   fun handle(query: InvitationsQuery) = runBlocking {
-    repository.search()
+    repository.search(code = query.code)
   }
 
   @QueryHandler

@@ -1,3 +1,3 @@
 package io.connorwyatt.wedding.invitations.messages.queries
 
-class InvitationsQuery
+data class InvitationsQuery(val code: String? = null)

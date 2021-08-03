@@ -20,11 +20,14 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.awaitBody
 import org.springframework.web.reactive.function.server.bodyValueAndAwait
 import org.springframework.web.reactive.function.server.buildAndAwait
+import org.springframework.web.reactive.function.server.queryParamOrNull
 
 @Component
 class InvitationsHandler(private val commandGateway: CommandGateway, private val queryGateway: QueryGateway) {
   suspend fun getInvitations(serverRequest: ServerRequest): ServerResponse {
-    val invitations = queryGateway.queryMany<Invitation, InvitationsQuery>(InvitationsQuery()).await()
+    val code = serverRequest.queryParamOrNull("code")
+
+    val invitations = queryGateway.queryMany<Invitation, InvitationsQuery>(InvitationsQuery(code = code)).await()
 
     return ServerResponse.ok().bodyValueAndAwait(invitations)
   }
