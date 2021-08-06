@@ -5,4 +5,4 @@ import org.springframework.boot.context.properties.ConstructorBinding
 
 @ConstructorBinding
 @ConfigurationProperties("google-sheets")
-data class GoogleSheetsProperties(val spreadsheetId: String)
+data class GoogleSheetsProperties(val spreadsheetId: String, val serviceAccountCredentialsPath: String? = null)

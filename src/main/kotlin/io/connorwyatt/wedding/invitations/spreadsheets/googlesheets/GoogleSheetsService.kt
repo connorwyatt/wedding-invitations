@@ -13,6 +13,8 @@ import io.connorwyatt.wedding.invitations.spreadsheets.SpreadsheetsService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Component
+import java.io.File
+import java.io.FileInputStream
 import java.net.URL
 import java.time.ZoneId
 import java.time.format.DateTimeFormatterBuilder
@@ -27,7 +29,7 @@ import java.time.temporal.ChronoField.YEAR
 @Component
 class GoogleSheetsService(
   @Value("\${spring.application.name}") applicationName: String,
-  googleSheetsProperties: GoogleSheetsProperties,
+  private val googleSheetsProperties: GoogleSheetsProperties,
 ) : SpreadsheetsService {
   private val spreadsheetId = googleSheetsProperties.spreadsheetId
   private val sheets: Sheets by lazy {
@@ -115,7 +117,8 @@ class GoogleSheetsService(
   }
 
   private fun getServiceAccountCredentials(): HttpCredentialsAdapter {
-    val credentialsJson = ClassPathResource(serviceAccountCredentialsFilePath).inputStream
+    val credentialsJson = googleSheetsProperties.serviceAccountCredentialsPath?.let { FileInputStream(File(it)) }
+      ?: ClassPathResource(serviceAccountCredentialsFilePath).inputStream
     val credentials = GoogleCredentials.fromStream(credentialsJson).createScoped(SheetsScopes.SPREADSHEETS)
     return HttpCredentialsAdapter(credentials)
   }
