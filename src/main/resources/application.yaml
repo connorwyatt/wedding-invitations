@@ -25,6 +25,11 @@ logging:
     org:
       jooq:
         Constants: WARN
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 ---
 server:
   port: 80
