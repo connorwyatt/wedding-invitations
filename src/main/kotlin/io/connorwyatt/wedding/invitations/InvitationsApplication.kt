@@ -11,5 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 class InvitationsApplication
 
 fun main(args: Array<String>) {
-  runApplication<InvitationsApplication>(*args)
+  runApplication<InvitationsApplication>(*args).run {
+    start()
+  }
 }
