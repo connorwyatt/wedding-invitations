@@ -5,7 +5,6 @@ import com.sendgrid.Request
 import com.sendgrid.Response
 import com.sendgrid.SendGridAPI
 import com.sendgrid.helpers.mail.Mail
-import com.sendgrid.helpers.mail.objects.Content
 import com.sendgrid.helpers.mail.objects.Email
 import com.sendgrid.helpers.mail.objects.Personalization
 import org.slf4j.Logger
@@ -19,12 +18,12 @@ class EmailService(private val sendGridApi: SendGridAPI) {
     val replyToEmailAddress = Email("connorwyatt1@gmail.com", "Connor Wyatt")
     val subject = "You're invited to our wedding!"
     val toEmailAddress = Email(emailAddress)
-    val content = Content("text/html", "You're invited to our wedding!")
-    val mail = Mail(fromEmailAddress, subject, toEmailAddress, content).apply {
-      replyTo = replyToEmailAddress
+
+    val mail = Mail().apply {
+      setFrom(fromEmailAddress)
+      setSubject(subject)
+      setReplyTo(replyToEmailAddress)
       setTemplateId("d-87f02d363c074961b88e7b36a28d33c5")
-      addCustomArg("addressedTo", addressedTo)
-      addCustomArg("invitationUrl", invitationUrl)
       addPersonalization(Personalization().apply {
         addTo(toEmailAddress)
         addDynamicTemplateData("addressedTo", addressedTo)
@@ -33,11 +32,10 @@ class EmailService(private val sendGridApi: SendGridAPI) {
     }
 
     logger.info(
-      "Sending invitation email to \"{}\" addressed to \"{}\" with invitation URL \"{}\", body \"{}\"",
+      "Sending invitation email to \"{}\" addressed to \"{}\" with invitation URL \"{}\"",
       emailAddress,
       addressedTo,
       invitationUrl,
-      mail.build()
     )
     sendMail(mail)
     logger.info("Successfully sent invitation email to \"{}\"", emailAddress)
