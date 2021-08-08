@@ -33,10 +33,11 @@ class EmailService(private val sendGridApi: SendGridAPI) {
     }
 
     logger.info(
-      "Sending invitation email to \"{}\" addressed to \"{}\" with invitation URL \"{}\"",
+      "Sending invitation email to \"{}\" addressed to \"{}\" with invitation URL \"{}\", body \"{}\"",
       emailAddress,
       addressedTo,
-      invitationUrl
+      invitationUrl,
+      mail.build()
     )
     sendMail(mail)
     logger.info("Successfully sent invitation email to \"{}\"", emailAddress)
