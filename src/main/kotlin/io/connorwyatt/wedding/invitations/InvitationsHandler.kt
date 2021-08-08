@@ -21,6 +21,7 @@ import org.springframework.web.reactive.function.server.awaitBody
 import org.springframework.web.reactive.function.server.bodyValueAndAwait
 import org.springframework.web.reactive.function.server.buildAndAwait
 import org.springframework.web.reactive.function.server.queryParamOrNull
+import java.util.UUID
 
 @Component
 class InvitationsHandler(private val commandGateway: CommandGateway, private val queryGateway: QueryGateway) {
@@ -45,6 +46,7 @@ class InvitationsHandler(private val commandGateway: CommandGateway, private val
     val definition = serverRequest.awaitBody<InvitationDefinition>()
 
     val command = CreateInvitation(
+      UUID.randomUUID().toString(),
       definition.code,
       definition.type,
       definition.addressedTo,
