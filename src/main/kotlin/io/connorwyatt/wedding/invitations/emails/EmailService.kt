@@ -23,6 +23,8 @@ class EmailService(private val sendGridApi: SendGridAPI) {
     val mail = Mail(fromEmailAddress, subject, toEmailAddress, content).apply {
       replyTo = replyToEmailAddress
       setTemplateId("d-87f02d363c074961b88e7b36a28d33c5")
+      addCustomArg("addressedTo", addressedTo)
+      addCustomArg("invitationUrl", invitationUrl)
       addPersonalization(Personalization().apply {
         addTo(toEmailAddress)
         addDynamicTemplateData("addressedTo", addressedTo)
