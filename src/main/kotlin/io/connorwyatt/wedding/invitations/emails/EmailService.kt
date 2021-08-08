@@ -2,11 +2,14 @@ package io.connorwyatt.wedding.invitations.emails
 
 import com.sendgrid.Method
 import com.sendgrid.Request
+import com.sendgrid.Response
 import com.sendgrid.SendGridAPI
 import com.sendgrid.helpers.mail.Mail
 import com.sendgrid.helpers.mail.objects.Content
 import com.sendgrid.helpers.mail.objects.Email
 import com.sendgrid.helpers.mail.objects.Personalization
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
@@ -27,14 +30,20 @@ class EmailService(private val sendGridApi: SendGridAPI) {
       })
     }
 
+    logger.info("Sending invitation email to {} with invitation URL {}", emailAddress, invitationUrl)
     sendMail(mail)
+    logger.info("Successfully sent invitation email to {}", emailAddress)
   }
 
-  private fun sendMail(mail: Mail) {
+  private fun sendMail(mail: Mail): Response {
     val request = Request()
     request.method = Method.POST
     request.endpoint = "mail/send"
     request.body = mail.build()
-    sendGridApi.api(request)
+    return sendGridApi.api(request)
+  }
+
+  companion object {
+    private val logger: Logger = LoggerFactory.getLogger(EmailService::class.java)
   }
 }
