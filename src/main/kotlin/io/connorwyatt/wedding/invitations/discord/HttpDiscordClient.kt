@@ -15,7 +15,7 @@ class HttpDiscordClient(
 ) :
   DiscordClient {
   override suspend fun sendToWebhook(invitation: Invitation, inviteeResponses: List<InviteeResponse>) {
-    httpClient.post<Unit>(discordProperties.webhookUri.toString(), mapOf<String, Any>(
+    val response = httpClient.post<Unit>(discordProperties.webhookUri.toString(), mapOf<String, Any>(
       "embeds" to listOf(
         mapOf(
           "title" to "Wedding Invitation Response Received",
@@ -34,6 +34,10 @@ class HttpDiscordClient(
         )
       )
     ))
+
+    if (!response.isSuccessStatusCode) {
+      throw Exception("Failed to send Discord notification")
+    }
   }
 
   companion object {

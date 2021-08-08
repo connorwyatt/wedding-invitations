@@ -30,9 +30,9 @@ class EmailService(private val sendGridApi: SendGridAPI) {
       })
     }
 
-    logger.info("Sending invitation email to {} with invitation URL {}", emailAddress, invitationUrl)
+    logger.info("Sending invitation email to \"{}\" with invitation URL \"{}\"", emailAddress, invitationUrl)
     sendMail(mail)
-    logger.info("Successfully sent invitation email to {}", emailAddress)
+    logger.info("Successfully sent invitation email to \"{}\"", emailAddress)
   }
 
   private fun sendMail(mail: Mail): Response {
