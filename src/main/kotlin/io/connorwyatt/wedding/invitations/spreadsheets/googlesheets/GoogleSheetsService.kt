@@ -127,6 +127,7 @@ class GoogleSheetsService(
     invitation.id,
     invitation.code,
     invitation.type.toString(),
+    invitation.addressedTo,
     invitation.status.toString(),
     invitation.emailAddress ?: blankValue,
     dateTimeFormatter.format(invitation.createdAt),
