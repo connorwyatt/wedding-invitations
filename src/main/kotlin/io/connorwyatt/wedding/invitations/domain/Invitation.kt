@@ -61,7 +61,7 @@ class Invitation {
         command.emailAddress))
 
       command.invitees.forEach { invitee ->
-        apply(InviteeAdded(command.invitationId, UUID.randomUUID().toString(), invitee.name))
+        apply(InviteeAdded(command.invitationId, UUID.randomUUID().toString(), invitee.name, invitee.requiresFood))
       }
     }
   }

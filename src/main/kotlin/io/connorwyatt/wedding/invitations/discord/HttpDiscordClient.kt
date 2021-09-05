@@ -22,12 +22,14 @@ class HttpDiscordClient(
           "description" to "[Google Sheet](${googleSheetsService.getSpreadsheetUrl()}) updated.",
           "color" to 16711422,
           "fields" to inviteeResponses.map { inviteeResponse ->
+            val invitee = invitation.invitees.single { it.id == inviteeResponse.id }
             mapOf(
-              "name" to (invitation.invitees.single { it.id == inviteeResponse.id }.name ?: "_No name_"),
+              "name" to (invitee.name ?: "_No name_"),
               "value" to listOfNotNull(
                 (if (inviteeResponse.attending) "$tickEmoji Attending" else "$crossEmoji Not attending"),
-                (if (inviteeResponse.attending) (if (inviteeResponse.foodOption == standard) ":hamburger: Standard food" else ":salad: Vegetarian food") else null),
-                (if (inviteeResponse.attending) (if (inviteeResponse.dietaryNotes != null) ":information_source: ${inviteeResponse.dietaryNotes}" else ":information_source: _No dietary information_") else null)
+                (if (inviteeResponse.attending && invitee.requiresFood) (if (inviteeResponse.foodOption == standard) ":hamburger: Standard food" else ":salad: Vegetarian food") else null),
+                (if (inviteeResponse.attending && invitee.requiresFood) (if (inviteeResponse.dietaryNotes != null) ":information_source: ${inviteeResponse.dietaryNotes}" else ":information_source: _No dietary information_") else null),
+                (if (inviteeResponse.attending && !invitee.requiresFood) ":fork_knife_plate: Does not require food" else null),
               ).joinToString("\n")
             )
           }

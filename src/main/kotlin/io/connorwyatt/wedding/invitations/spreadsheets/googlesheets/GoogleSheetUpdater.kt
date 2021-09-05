@@ -47,6 +47,7 @@ class GoogleSheetUpdater(
         id = event.inviteeId,
         name = event.name,
         status = unknown,
+        requiresFood = event.requiresFood,
       )
     )
   }

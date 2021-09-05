@@ -47,6 +47,7 @@ class InvitationsProjection(private val repository: SqlInvitationsRepository) {
         id = event.inviteeId,
         name = event.name,
         status = unknown,
+        requiresFood = event.requiresFood,
       )
 
       val updatedInvitation = invitation.copy(invitees = invitation.invitees.plus(invitee))

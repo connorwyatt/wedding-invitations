@@ -14,6 +14,7 @@ class InviteesRecordMapper : RecordMapper<InviteesRecord, Invitee> {
         id = record.get(table.id),
         name = record.get(table.name),
         status = record.get(table.status, InviteeStatus::class.java),
+        requiresFood = record.get(table.requiresFood),
         foodOption = record.get(table.foodOption, FoodOption::class.java),
         dietaryNotes = record.get(table.dietaryNotes),
       )

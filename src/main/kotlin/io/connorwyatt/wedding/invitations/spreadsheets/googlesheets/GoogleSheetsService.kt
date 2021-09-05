@@ -141,6 +141,7 @@ class GoogleSheetsService(
     invitee.id,
     invitee.name ?: blankValue,
     invitee.status.toString(),
+    if (invitee.requiresFood) "Yes" else "No",
     invitee.foodOption?.toString() ?: blankValue,
     invitee.dietaryNotes ?: blankValue,
   )

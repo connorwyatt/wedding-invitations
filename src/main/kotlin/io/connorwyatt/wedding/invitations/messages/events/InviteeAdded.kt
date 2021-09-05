@@ -4,4 +4,5 @@ data class InviteeAdded(
   val invitationId: String,
   val inviteeId: String,
   val name: String?,
+  val requiresFood: Boolean,
 )
