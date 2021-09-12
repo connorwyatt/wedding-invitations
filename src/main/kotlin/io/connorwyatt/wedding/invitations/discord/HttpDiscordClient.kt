@@ -42,6 +42,22 @@ class HttpDiscordClient(
     }
   }
 
+  override suspend fun log(level: String, message: String) {
+    val response = httpClient.post<Unit>(discordProperties.logWebhookUri.toString(), mapOf<String, Any>(
+      "embeds" to listOf(
+        mapOf(
+          "title" to "$level Occurred",
+          "description" to "$message.",
+          "color" to 16711422,
+        )
+      )
+    ))
+
+    if (!response.isSuccessStatusCode) {
+      throw Exception("Failed to log to Discord")
+    }
+  }
+
   companion object {
     private const val tickEmoji = "<:circletick:869731271243358228>"
     private const val crossEmoji = "<:circlecross:869731292894351421>"

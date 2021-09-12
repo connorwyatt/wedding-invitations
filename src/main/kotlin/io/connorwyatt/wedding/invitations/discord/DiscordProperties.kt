@@ -6,4 +6,4 @@ import java.net.URI
 
 @ConstructorBinding
 @ConfigurationProperties("discord")
-data class DiscordProperties(val webhookUri: URI)
+data class DiscordProperties(val webhookUri: URI, val logWebhookUri: URI)

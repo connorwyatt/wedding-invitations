@@ -16,6 +16,7 @@ spring:
     api-key: REPLACE_ME
 discord:
   webhook-uri: REPLACE_ME
+  log-webhook-uri: REPLACE_ME
 google-sheets:
   spreadsheet-id: REPLACE_ME
 web-app:
