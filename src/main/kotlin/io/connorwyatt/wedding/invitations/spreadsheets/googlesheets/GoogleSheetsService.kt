@@ -7,6 +7,7 @@ import com.google.api.services.sheets.v4.SheetsScopes
 import com.google.api.services.sheets.v4.model.ValueRange
 import com.google.auth.http.HttpCredentialsAdapter
 import com.google.auth.oauth2.GoogleCredentials
+import io.connorwyatt.wedding.invitations.WebAppProperties
 import io.connorwyatt.wedding.invitations.messages.models.Invitation
 import io.connorwyatt.wedding.invitations.messages.models.Invitee
 import io.connorwyatt.wedding.invitations.spreadsheets.SpreadsheetsService
@@ -30,6 +31,7 @@ import java.time.temporal.ChronoField.YEAR
 class GoogleSheetsService(
   @Value("\${spring.application.name}") applicationName: String,
   private val googleSheetsProperties: GoogleSheetsProperties,
+  private val webAppProperties: WebAppProperties,
 ) : SpreadsheetsService {
   private val spreadsheetId = googleSheetsProperties.spreadsheetId
   private val sheets: Sheets by lazy {
@@ -134,6 +136,7 @@ class GoogleSheetsService(
     invitation.sentAt?.let { dateTimeFormatter.format(it) } ?: blankValue,
     invitation.respondedAt?.let { dateTimeFormatter.format(it) } ?: blankValue,
     invitation.contactInformation ?: blankValue,
+    webAppProperties.invitationUrlPrefix + invitation.code,
   )
 
   private fun mapToRow(invitationId: String, invitee: Invitee) = listOf(
