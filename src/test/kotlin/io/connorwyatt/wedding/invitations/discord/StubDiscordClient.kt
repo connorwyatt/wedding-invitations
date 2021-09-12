@@ -5,4 +5,6 @@ import io.connorwyatt.wedding.invitations.messages.models.InviteeResponse
 
 class StubDiscordClient : DiscordClient {
   override suspend fun sendToWebhook(invitation: Invitation, inviteeResponses: List<InviteeResponse>) = Unit
+
+  override suspend fun log(level: String, message: String) = Unit
 }
